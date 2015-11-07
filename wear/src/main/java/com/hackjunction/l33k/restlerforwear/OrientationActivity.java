@@ -61,6 +61,12 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
         mRollView = (TextView) findViewById(R.id.roll);
         mProgress = (ProgressBar) findViewById(R.id.progressBar);
         mButton = (Button) findViewById(R.id.ack);
+        mButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                finish();
+                startActivity(getIntent());
+            }
+        });
 
         mStatusView.setText("Piping sensor data...");
 
