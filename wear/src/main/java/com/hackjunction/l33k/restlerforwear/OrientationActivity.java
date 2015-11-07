@@ -1,5 +1,9 @@
 package com.hackjunction.l33k.restlerforwear;
 
+        import android.animation.ObjectAnimator;
+        import android.app.NotificationManager;
+        import android.app.PendingIntent;
+        import android.content.Intent;
         import android.hardware.Sensor;
         import android.hardware.SensorEvent;
         import android.hardware.SensorEventListener;
@@ -7,9 +11,13 @@ package com.hackjunction.l33k.restlerforwear;
         import android.os.Bundle;
         import android.os.CountDownTimer;
         import android.os.Vibrator;
+        import android.support.v4.app.NotificationCompat;
+        import android.support.v4.app.NotificationManagerCompat;
+        import android.support.v4.app.NotificationCompat.WearableExtender;
         import android.support.wearable.activity.WearableActivity;
         import android.support.wearable.view.BoxInsetLayout;
         import android.view.View;
+        import android.view.animation.DecelerateInterpolator;
         import android.widget.Button;
         import android.widget.ProgressBar;
         import android.widget.TextView;
@@ -44,6 +52,7 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
     private TextView mRollView;
     private ProgressBar mProgress;
     private Button mButton;
+    private NotificationManagerCompat notificationManager;
 
     private TextView mClockView;
 
@@ -55,14 +64,36 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
         setContentView(R.layout.activity_orientation);
       //  setAmbientEnabled();
 
+        Intent viewIntent = new Intent(this, OrientationActivity.class);
+       // viewIntent.putExtra(EXTRA_EVENT_ID, eventId);
+        PendingIntent viewPendingIntent =
+                PendingIntent.getActivity(this, 0, viewIntent, 0);
+
+        final NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.button)
+                        .setContentTitle("Time for exercise!")
+                        .setContentText("Do some wrist moves")
+                        .setContentIntent(viewPendingIntent);
+
+        // Get an instance of the NotificationManager service
+        notificationManager = NotificationManagerCompat.from(this);
+
+
         mContainerView = (BoxInsetLayout) findViewById(R.id.container);
         mStatusView = (TextView) findViewById(R.id.status);
         mPitchView = (TextView) findViewById(R.id.pitch);
         mRollView = (TextView) findViewById(R.id.roll);
         mProgress = (ProgressBar) findViewById(R.id.progressBar);
         mButton = (Button) findViewById(R.id.ack);
+        mButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                finish();
+                startActivity(getIntent());
+            }
+        });
 
-        mStatusView.setText("Piping sensor data...");
+        mStatusView.setText("Observing...");
 
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -71,10 +102,10 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
         mVibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
 
 
-        orientationCountdown = new CountDownTimer(30000, 50) {
-
+        orientationCountdown = new CountDownTimer(30000, 20) {
+            int current = 0;
             public void onTick(long millisUntilFinished) {
-                double progress = ((30000.0 - millisUntilFinished)/30000) * 100;
+                double progress = ((30000.0 - millisUntilFinished)/30000) * 10000;
                 mProgress.setProgress((int) progress);
             }
 
@@ -83,6 +114,12 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
                 mButton.setVisibility(View.VISIBLE);
                 mProgress.setProgress(100);
                 mVibrator.vibrate(1000L);
+                long time = new Date().getTime();
+                String tmpStr = String.valueOf(time);
+                String last4Str = tmpStr.substring(tmpStr.length() - 5);
+                int notificationId = Integer.valueOf(last4Str);
+
+                notificationManager.notify(notificationId, notificationBuilder.build());
             }
         }.start();
 
@@ -100,23 +137,20 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
     }
 
 
-//    @Override
-//    public void onEnterAmbient(Bundle ambientDetails) {
-//        super.onEnterAmbient(ambientDetails);
-//        updateDisplay();
-//    }
-//
-//    @Override
-//    public void onUpdateAmbient() {
-//        super.onUpdateAmbient();
-//        updateDisplay();
-//    }
-//
-//    @Override
-//    public void onExitAmbient() {
-//        updateDisplay();
-//        super.onExitAmbient();
-//    }
+    @Override
+    public void onEnterAmbient(Bundle ambientDetails) {
+        super.onEnterAmbient(ambientDetails);
+    }
+
+    @Override
+    public void onUpdateAmbient() {
+        super.onUpdateAmbient();
+    }
+
+    @Override
+    public void onExitAmbient() {
+        super.onExitAmbient();
+    }
 //
 //    private void updateDisplay() {
 //        if (isAmbient()) {
@@ -151,8 +185,8 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
                 azimuth = orientation[0]; // orientation contains: azimuth, pitch and roll
                 pitch = orientation[1]; // orientation contains: azimuth, pitch and roll
                 roll = orientation[2]; // orientation contains: azimuth, pitch and roll
-                mPitchView.setText("Pitch: " + pitch.toString());
-                mRollView.setText("Roll: " + roll.toString());
+                mPitchView.setText("Pitch:\n" + pitch.toString());
+                mRollView.setText("Roll:\n" + roll.toString());
 
             }
         }
