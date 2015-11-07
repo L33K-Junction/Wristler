@@ -4,4 +4,7 @@
     <string name="welcoming">Welcome!</string>
     <string name="gyro_debug">Test!</string>
     <string name="status">Loading gyro data...</string>
+    <string name="pitch">Pitch: Loading...</string>
+    <string name="roll">Roll: Loading...</string>
+    <string name="acknowledge">Start</string>
 </resources>

@@ -6,11 +6,7 @@
     android:layout_height="match_parent" android:id="@+id/container"
     tools:context=".ExerciseActivity" tools:deviceIds="wear">
 
-    <TextView android:id="@+id/text" app:layout_box="all" android:layout_width="match_parent"
+    <TextView android:id="@+id/headline" app:layout_box="all" android:layout_width="match_parent"
         android:layout_height="match_parent" android:text="@string/gyro_debug" />
-
-    <TextView android:id="@+id/clock" app:layout_box="all" android:layout_gravity="bottom|start"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:textColor="@android:color/white" />
 
 </android.support.wearable.view.BoxInsetLayout>
