@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:layout_column="1"
     android:layout_row="3"
+    android:keepScreenOn="true"
     android:orientation="vertical">
 
     <TextView

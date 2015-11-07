@@ -5,13 +5,14 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:id="@+id/container"
     tools:context=".OrientationActivity" tools:deviceIds="wear"
+    android:keepScreenOn="true"
     style="@style/Theme.Wearable">
 
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="260dp"
-        android:layout_height="match_parent"
+        android:layout_width="400px"
+        android:layout_height="400px"
         android:progressDrawable="@drawable/progress_bar"
         android:progress="5000"
         android:max="10000"

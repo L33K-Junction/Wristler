@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ExerciseActivity"
-    tools:deviceIds="wear_round">
+<android.support.wearable.view.BoxInsetLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:id="@+id/container"
+    tools:context=".OrientationActivity" tools:deviceIds="wear"
+    android:keepScreenOn="true"
+    style="@style/Theme.Wearable">
+
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="400px"
+        android:layout_height="400px"
         android:progressDrawable="@drawable/progress_bar"
         android:progress="50"
         android:max="100"
@@ -20,8 +23,7 @@
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true">
+        android:layout_gravity="center">
 
         <TextView
             android:layout_width="match_parent"
@@ -60,4 +62,4 @@
 
 
     </LinearLayout>
-</RelativeLayout>
+</android.support.wearable.view.BoxInsetLayout>
