@@ -1,12 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.wearable.view.BoxInsetLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:id="@+id/container"
-    tools:context=".ExerciseActivity" tools:deviceIds="wear">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ExerciseActivity"
+    tools:deviceIds="wear_round">
 
-    <TextView android:id="@+id/headline" app:layout_box="all" android:layout_width="match_parent"
-        android:layout_height="match_parent" android:text="@string/gyro_debug" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
 
-</android.support.wearable.view.BoxInsetLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tv_watch"
+            android:layout_gravity="bottom"
+            android:textAlignment="center"
+            style="@style/TextAppearance.Wearable.Medium"
+            android:textColor="@color/white"
+            android:text="Stretch"
+            android:layout_marginBottom="7dp"/>
+
+        <ImageView
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
+            android:id="@+id/exersice_image"
+            android:src="@drawable/exercise1_hand1"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/exercise_number_tv"
+                android:layout_gravity="bottom"
+                android:textColor="@color/light_grey"
+                style="@style/TextAppearance.Wearable.Medium"
+                android:paddingRight="10dp"
+                android:text="1/3"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/exercise_seconds_left_tv"
+                android:layout_gravity="bottom"
+                style="@style/TextAppearance.Wearable.Medium"
+                android:text="15 sec"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</RelativeLayout>

@@ -1,24 +1,23 @@
 package com.hackjunction.l33k.restlerforwear;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.wearable.activity.WearableActivity;
-import android.support.wearable.view.BoxInsetLayout;
-import android.hardware.SensorManager;
-import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 public class ExerciseActivity extends WearableActivity {
 
-    private static final SimpleDateFormat AMBIENT_DATE_FORMAT =
-            new SimpleDateFormat("HH:mm", Locale.US);
+    public static final int EXERCISE_DURATION = 15000;
 
-    private BoxInsetLayout mContainerView;
-    private TextView mTextView;
-    private TextView mClockView;
+    private final int STRETCH_EXERCISE_IMAGES[] = {R.drawable.exercise1_hand1,
+            R.drawable.exercise1_hand2};
+
+    private CountDownTimer timer;
+    private ImageView exerciseImageView;
+    private TextView secondsLeftTextView;
+
+    private int step = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +25,22 @@ public class ExerciseActivity extends WearableActivity {
         setContentView(R.layout.activity_exercise);
         setAmbientEnabled();
 
-        mContainerView = (BoxInsetLayout) findViewById(R.id.container);
-        mTextView = (TextView) findViewById(R.id.text);
-        //alignment = SensorManager.getOrientation();
-        mTextView.setText("Getting pitch...");
-        mClockView = (TextView) findViewById(R.id.clock);
+        exerciseImageView = (ImageView) findViewById(R.id.exersice_image);
+        secondsLeftTextView = (TextView) findViewById(R.id.exercise_seconds_left_tv);
+
+        timer = new CountDownTimer(EXERCISE_DURATION, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                step++;
+                exerciseImageView.setImageResource(STRETCH_EXERCISE_IMAGES[step % 4 > 1 ? 0 : 1]);
+
+                secondsLeftTextView.setText((EXERCISE_DURATION / 1000 - step) + " sec");
+            }
+
+            public void onFinish() {
+
+            }
+        }.start();
     }
 
     @Override
@@ -52,16 +62,6 @@ public class ExerciseActivity extends WearableActivity {
     }
 
     private void updateDisplay() {
-        if (isAmbient()) {
-            mContainerView.setBackgroundColor(getResources().getColor(android.R.color.black));
-            mTextView.setTextColor(getResources().getColor(android.R.color.white));
-            mClockView.setVisibility(View.VISIBLE);
 
-            mClockView.setText(AMBIENT_DATE_FORMAT.format(new Date()));
-        } else {
-            mContainerView.setBackground(null);
-            mTextView.setTextColor(getResources().getColor(android.R.color.black));
-            mClockView.setVisibility(View.GONE);
-        }
     }
 }
