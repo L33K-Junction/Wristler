@@ -102,16 +102,12 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
         mVibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
 
 
-        orientationCountdown = new CountDownTimer(30000, 200) {
-
+        orientationCountdown = new CountDownTimer(30000, 20) {
+            int current = 0;
             public void onTick(long millisUntilFinished) {
-                double progress = ((30000.0 - millisUntilFinished)/30000) * 100;
-                // Attempt to make progress smooth
-//                ObjectAnimator animation = ObjectAnimator.ofInt(mProgress, "progress", (int)progress);
-//                animation.setDuration(200);
-//                animation.setInterpolator(new DecelerateInterpolator());
-//                animation.start();
-               mProgress.setProgress((int) progress);
+                double progress = ((30000.0 - millisUntilFinished)/30000) * 10000;
+                mStatusView.setText(Integer.toString((int) progress));
+                mProgress.setProgress((int) progress);
             }
 
             public void onFinish() {
