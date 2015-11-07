@@ -7,7 +7,7 @@
     tools:context=".ExerciseActivity" tools:deviceIds="wear">
 
     <TextView android:id="@+id/text" app:layout_box="all" android:layout_width="match_parent"
-        android:layout_height="match_parent" android:text="@string/gyro_debug" />
+        android:layout_height="match_parent" android:text="@string/status" />
 
     <TextView android:id="@+id/clock" app:layout_box="all" android:layout_gravity="bottom|start"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
