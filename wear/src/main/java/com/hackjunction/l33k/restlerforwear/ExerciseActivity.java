@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.wearable.activity.WearableActivity;
+import android.util.Log;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -13,8 +14,8 @@ public class ExerciseActivity extends WearableActivity {
 
     public static final int EXERCISE_DURATION = 20000;
 
-    private final int STRETCH_EXERCISE_IMAGES[] = {R.drawable.exercise1_hand1,
-            R.drawable.exercise1_hand2};
+    private final int STRETCH_EXERCISE_IMAGES[] = {R.drawable.exercise1_hand1_v2,
+            R.drawable.exercise1_hand2_v2};
 
     private CountDownTimer timer;
     private ImageView exerciseImageView;
@@ -36,9 +37,8 @@ public class ExerciseActivity extends WearableActivity {
         countdownAnimation.setRepeatCount(-1);
         secondsLeftTextView.setAnimation(countdownAnimation);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        countdownAnimation.start();
 
-        timer = new CountDownTimer(EXERCISE_DURATION + 2000, 1000) {
+        timer = new CountDownTimer(EXERCISE_DURATION + 1000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 exerciseImageView.setImageResource(STRETCH_EXERCISE_IMAGES[step % 4 > 1 ? 0 : 1]);
@@ -46,15 +46,20 @@ public class ExerciseActivity extends WearableActivity {
                 int secondsLeft = EXERCISE_DURATION / 1000 - step;
                 secondsLeftTextView.setText("00:" + (secondsLeft < 10 ? "0" + secondsLeft : secondsLeft));
 
-                progressBar.setProgress((int)((double) step / EXERCISE_DURATION * 100));
+                double progress = step / (EXERCISE_DURATION / 1000.0);
+                progressBar.setProgress((int) (progress * 100));
                 step++;
             }
 
             public void onFinish() {
+                secondsLeftTextView.setText("00:00");
+                progressBar.setProgress(10000);
                 Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(mainActivity);
             }
         }.start();
+        countdownAnimation.start();
+
     }
 
     @Override
