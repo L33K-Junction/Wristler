@@ -106,7 +106,6 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
             int current = 0;
             public void onTick(long millisUntilFinished) {
                 double progress = ((30000.0 - millisUntilFinished)/30000) * 10000;
-                mStatusView.setText(Integer.toString((int) progress));
                 mProgress.setProgress((int) progress);
             }
 
