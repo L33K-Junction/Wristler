@@ -10,6 +10,7 @@ package com.hackjunction.l33k.restlerforwear;
         import android.hardware.SensorManager;
         import android.os.Bundle;
         import android.os.CountDownTimer;
+        import android.os.Handler;
         import android.os.Vibrator;
         import android.support.v4.app.NotificationCompat;
         import android.support.v4.app.NotificationManagerCompat;
@@ -34,8 +35,8 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
     private static final SimpleDateFormat AMBIENT_DATE_FORMAT =
             new SimpleDateFormat("HH:mm", Locale.US);
 
-    private CountDownTimer orientationCountdown;
-    private int timeleft;
+    private CountDownTimer exerciseCountdown;
+    private double currentProgress;
 
     private SensorManager mSensorManager;
     private Vibrator mVibrator;
@@ -50,11 +51,16 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
     private TextView mStatusView;
     private TextView mPitchView;
     private TextView mRollView;
+    private TextView mTimer;
     private ProgressBar mProgress;
     private Button mButton;
     private NotificationManagerCompat notificationManager;
 
+    private final int EXERCISE_INTERVAL = 120000;
+
     private TextView mClockView;
+
+    private int progress;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,26 +70,27 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
         setContentView(R.layout.activity_orientation);
       //  setAmbientEnabled();
 
-        Intent viewIntent = new Intent(this, OrientationActivity.class);
-       // viewIntent.putExtra(EXTRA_EVENT_ID, eventId);
-        PendingIntent viewPendingIntent =
-                PendingIntent.getActivity(this, 0, viewIntent, 0);
+//        Intent viewIntent = new Intent(this, OrientationActivity.class);
+//       // viewIntent.putExtra(EXTRA_EVENT_ID, eventId);
+//        PendingIntent viewPendingIntent =
+//                PendingIntent.getActivity(this, 0, viewIntent, 0);
 
-        final NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.button)
-                        .setContentTitle("Time for exercise!")
-                        .setContentText("Do some wrist moves")
-                        .setContentIntent(viewPendingIntent);
+//        final NotificationCompat.Builder notificationBuilder =
+//                new NotificationCompat.Builder(this)
+//                        .setSmallIcon(R.drawable.button)
+//                        .setContentTitle("Time for exercise!")
+//                        .setContentText("Do some wrist moves")
+//                        .setContentIntent(viewPendingIntent);
 
         // Get an instance of the NotificationManager service
-        notificationManager = NotificationManagerCompat.from(this);
+//        notificationManager = NotificationManagerCompat.from(this);
 
 
         mContainerView = (BoxInsetLayout) findViewById(R.id.container);
         mStatusView = (TextView) findViewById(R.id.status);
         mPitchView = (TextView) findViewById(R.id.pitch);
         mRollView = (TextView) findViewById(R.id.roll);
+        mTimer = (TextView) findViewById(R.id.timer);
         mProgress = (ProgressBar) findViewById(R.id.progressBar);
         mButton = (Button) findViewById(R.id.ack);
         mButton.setOnClickListener(new View.OnClickListener() {
@@ -102,27 +109,31 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
         mVibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
 
 
-        orientationCountdown = new CountDownTimer(30000, 20) {
-            int current = 0;
-            public void onTick(long millisUntilFinished) {
-                double progress = ((30000.0 - millisUntilFinished)/30000) * 10000;
-                mProgress.setProgress((int) progress);
+        currentProgress = 0.0;
+        // Set exercise to trigger in constant unless wrist movement is detected
+      //  exerciseCountdown = createCountDown(EXERCISE_INTERVAL);
+        final Handler h = new Handler();
+        h.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                double progress = (currentProgress / 100) * 100;
+                if (progress < 10000.0) {
+                    int roundProgress = (int) progress;
+                    mProgress.setProgress(roundProgress);
+                    currentProgress += 2;
+                    mTimer.setText(Integer.toString(roundProgress/100) + "%");
+                    h.postDelayed(this, 20);
+                } else {
+                    mStatusView.setText("EXERCISE!");
+                    mButton.setVisibility(View.VISIBLE);
+                    mProgress.setProgress(100);
+                    mVibrator.vibrate(1000L);
+                }
+
             }
-
-            public void onFinish() {
-                mStatusView.setText("EXERCISE!");
-                mButton.setVisibility(View.VISIBLE);
-                mProgress.setProgress(100);
-                mVibrator.vibrate(1000L);
-                long time = new Date().getTime();
-                String tmpStr = String.valueOf(time);
-                String last4Str = tmpStr.substring(tmpStr.length() - 5);
-                int notificationId = Integer.valueOf(last4Str);
-
-                notificationManager.notify(notificationId, notificationBuilder.build());
-            }
-        }.start();
-
+        }, 20);
     }
 
     protected void onResume() {
@@ -185,6 +196,9 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
                 azimuth = orientation[0]; // orientation contains: azimuth, pitch and roll
                 pitch = orientation[1]; // orientation contains: azimuth, pitch and roll
                 roll = orientation[2]; // orientation contains: azimuth, pitch and roll
+                if (Math.abs(pitch) > 0.5 || Math.abs(roll) > 0.5) {
+                    currentProgress -= 5;
+                }
                 mPitchView.setText("Pitch:\n" + pitch.toString());
                 mRollView.setText("Roll:\n" + roll.toString());
 
