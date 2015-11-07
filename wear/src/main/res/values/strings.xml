@@ -8,4 +8,7 @@
     <string name="pitch">Pitch: Loading...</string>
     <string name="roll">Roll: Loading...</string>
     <string name="acknowledge">Start</string>
+    <string name="exersize1">Stretch</string>
+    <string name="exersize2">Push</string>
+    <string name="exersize3">Shake</string>
 </resources>
