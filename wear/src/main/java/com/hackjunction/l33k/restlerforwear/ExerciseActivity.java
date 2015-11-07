@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.wearable.activity.WearableActivity;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class ExerciseActivity extends WearableActivity {
 
-    public static final int EXERCISE_DURATION = 15000;
+    public static final int EXERCISE_DURATION = 20000;
 
     private final int STRETCH_EXERCISE_IMAGES[] = {R.drawable.exercise1_hand1,
             R.drawable.exercise1_hand2};
@@ -17,6 +19,7 @@ public class ExerciseActivity extends WearableActivity {
     private CountDownTimer timer;
     private ImageView exerciseImageView;
     private TextView secondsLeftTextView;
+    private ProgressBar progressBar;
 
     private int step = 0;
 
@@ -28,14 +31,23 @@ public class ExerciseActivity extends WearableActivity {
 
         exerciseImageView = (ImageView) findViewById(R.id.exersice_image);
         secondsLeftTextView = (TextView) findViewById(R.id.exercise_seconds_left_tv);
+        AlphaAnimation countdownAnimation = new AlphaAnimation(1.0f, 0.6f);
+        countdownAnimation.setDuration(1000);
+        countdownAnimation.setRepeatCount(-1);
+        secondsLeftTextView.setAnimation(countdownAnimation);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        countdownAnimation.start();
 
-        timer = new CountDownTimer(EXERCISE_DURATION, 1000) {
+        timer = new CountDownTimer(EXERCISE_DURATION + 2000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                step++;
                 exerciseImageView.setImageResource(STRETCH_EXERCISE_IMAGES[step % 4 > 1 ? 0 : 1]);
 
-                secondsLeftTextView.setText((EXERCISE_DURATION / 1000 - step) + " sec");
+                int secondsLeft = EXERCISE_DURATION / 1000 - step;
+                secondsLeftTextView.setText("00:" + (secondsLeft < 10 ? "0" + secondsLeft : secondsLeft));
+
+                progressBar.setProgress((int)((double) step / EXERCISE_DURATION * 100));
+                step++;
             }
 
             public void onFinish() {
