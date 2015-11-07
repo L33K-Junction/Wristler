@@ -122,7 +122,7 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
                 if (progress < 10000.0) {
                     int roundProgress = (int) progress;
                     mProgress.setProgress(roundProgress);
-                    currentProgress += 2;
+                    currentProgress += 20;
                     mTimer.setText(Integer.toString(roundProgress/100) + "%");
                     h.postDelayed(this, 20);
                 } else {
@@ -197,7 +197,7 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
                 pitch = orientation[1]; // orientation contains: azimuth, pitch and roll
                 roll = orientation[2]; // orientation contains: azimuth, pitch and roll
                 if (Math.abs(pitch) > 0.5 || Math.abs(roll) > 0.5) {
-                    currentProgress -= 5;
+                    currentProgress -= 50;
                 }
                 mPitchView.setText("Pitch:\n" + pitch.toString());
                 mRollView.setText("Roll:\n" + roll.toString());
