@@ -11,4 +11,5 @@
     <string name="exersize1">Stretch</string>
     <string name="exersize2">Push</string>
     <string name="exersize3">Shake</string>
+    <string name="adios">Good Bye!</string>
 </resources>

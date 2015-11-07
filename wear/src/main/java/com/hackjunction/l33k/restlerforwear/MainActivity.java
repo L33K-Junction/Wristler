@@ -17,6 +17,7 @@ public class MainActivity extends Activity {
 
     private ImageView imageView;
     private TextView startTv;
+    ImageView imageViewStart, imageViewClosing;
 
     @Override
     protected void onCreate(Bundle instance) {
@@ -39,7 +40,24 @@ public class MainActivity extends Activity {
 
         AnimationDrawable frameAnimation = (AnimationDrawable) imageView.getDrawable();
         frameAnimation.start();
+
+        new Runnable() {
+            private boolean handState;
+
+            @Override
+            public void run() {
+                imageViewClosing = (ImageView)findViewById(R.id.imageClose);
+                if (!handState) {
+                    imageViewClosing.setImageResource(R.mipmap.thehand);
+                } else {
+                    imageViewClosing.setImageResource(R.mipmap.thehandbye);
+                }
+                handState = !handState;
+                imageViewClosing.postDelayed(this, 3000);
+            }
+        }.run();
     }
+
 
 
 }
