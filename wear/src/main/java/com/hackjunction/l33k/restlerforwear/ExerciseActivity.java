@@ -3,8 +3,10 @@ package com.hackjunction.l33k.restlerforwear;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.wearable.activity.WearableActivity;
 import android.util.Log;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -22,8 +24,6 @@ public class ExerciseActivity extends WearableActivity {
     private TextView secondsLeftTextView;
     private ProgressBar progressBar;
 
-    private int step = 0;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,17 +38,17 @@ public class ExerciseActivity extends WearableActivity {
         secondsLeftTextView.setAnimation(countdownAnimation);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        timer = new CountDownTimer(EXERCISE_DURATION + 1000, 1000) {
+        int delay = 50;
+        timer = new CountDownTimer(EXERCISE_DURATION, delay) {
 
             public void onTick(long millisUntilFinished) {
-                exerciseImageView.setImageResource(STRETCH_EXERCISE_IMAGES[step % 4 > 1 ? 0 : 1]);
+                int remainingSeconds = (int) (millisUntilFinished / 1000);
 
-                int secondsLeft = EXERCISE_DURATION / 1000 - step;
-                secondsLeftTextView.setText("00:" + (secondsLeft < 10 ? "0" + secondsLeft : secondsLeft));
+                exerciseImageView.setImageResource(STRETCH_EXERCISE_IMAGES[remainingSeconds % 4 > 1 ? 0 : 1]);
+                secondsLeftTextView.setText("00:" + (remainingSeconds < 10 ? "0" + remainingSeconds : remainingSeconds));
 
-                double progress = step / (EXERCISE_DURATION / 1000.0);
-                progressBar.setProgress((int) (progress * 100));
-                step++;
+                double progress = 1 - ((double) millisUntilFinished / EXERCISE_DURATION);
+                progressBar.setProgress((int) (progress * 10000));
             }
 
             public void onFinish() {
