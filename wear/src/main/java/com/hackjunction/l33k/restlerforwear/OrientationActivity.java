@@ -38,57 +38,74 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
 
         super.onCreate(savedInstanceState);
         //setContentView(mCustomDrawableView);    // Register the sensor listeners
-        setAmbientEnabled();
+        setContentView(R.layout.activity_orientation);
+      //  setAmbientEnabled();
 
         mContainerView = (BoxInsetLayout) findViewById(R.id.container);
         mTextView = (TextView) findViewById(R.id.text);
-        setContentView(R.layout.activity_orientation);
+        mTextView.setText("Got onCreate! Trying to engage sensors");
+
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
     }
 
-    @Override
-    public void onEnterAmbient(Bundle ambientDetails) {
-        super.onEnterAmbient(ambientDetails);
-        updateDisplay();
+    protected void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI);
     }
 
-    @Override
-    public void onUpdateAmbient() {
-        super.onUpdateAmbient();
-        updateDisplay();
+    protected void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(this);
     }
 
-    @Override
-    public void onExitAmbient() {
-        updateDisplay();
-        super.onExitAmbient();
-    }
 
-    private void updateDisplay() {
-        if (isAmbient()) {
-            mContainerView.setBackgroundColor(getResources().getColor(android.R.color.black));
-            mTextView.setTextColor(getResources().getColor(android.R.color.white));
-            mClockView.setVisibility(View.VISIBLE);
-
-            mClockView.setText(AMBIENT_DATE_FORMAT.format(new Date()));
-        } else {
-            mContainerView.setBackground(null);
-            mTextView.setTextColor(getResources().getColor(android.R.color.black));
-            mClockView.setVisibility(View.GONE);
-        }
-    }
+//    @Override
+//    public void onEnterAmbient(Bundle ambientDetails) {
+//        super.onEnterAmbient(ambientDetails);
+//        updateDisplay();
+//    }
+//
+//    @Override
+//    public void onUpdateAmbient() {
+//        super.onUpdateAmbient();
+//        updateDisplay();
+//    }
+//
+//    @Override
+//    public void onExitAmbient() {
+//        updateDisplay();
+//        super.onExitAmbient();
+//    }
+//
+//    private void updateDisplay() {
+//        if (isAmbient()) {
+//            mContainerView.setBackgroundColor(getResources().getColor(android.R.color.black));
+//            mTextView.setTextColor(getResources().getColor(android.R.color.white));
+//            mClockView.setVisibility(View.VISIBLE);
+//
+//            mClockView.setText(AMBIENT_DATE_FORMAT.format(new Date()));
+//        } else {
+//            mContainerView.setBackground(null);
+//            mTextView.setTextColor(getResources().getColor(android.R.color.black));
+//            mClockView.setVisibility(View.GONE);
+//        }
+//    }
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {  }
 
     float[] mGravity;
     float[] mGeomagnetic;
     public void onSensorChanged(SensorEvent event) {
+        mTextView.setText("Sensor changed");
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
             mGravity = event.values;
+            mTextView.setText("Sensor changed - Accel");
         if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
             mGeomagnetic = event.values;
+            mTextView.setText("Sensor changed - Mag");
         if (mGravity != null && mGeomagnetic != null) {
             float R[] = new float[9];
             float I[] = new float[9];

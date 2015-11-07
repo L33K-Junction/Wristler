@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Wristler for Wear</string>
     <string name="gyro_debug">Test!</string>
-    <string name="status">Test!</string>
+    <string name="status">Loading gyro data...</string>
 </resources>
