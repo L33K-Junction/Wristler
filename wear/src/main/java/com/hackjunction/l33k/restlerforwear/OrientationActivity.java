@@ -1,5 +1,8 @@
 package com.hackjunction.l33k.restlerforwear;
 
+        import android.app.NotificationManager;
+        import android.app.PendingIntent;
+        import android.content.Intent;
         import android.hardware.Sensor;
         import android.hardware.SensorEvent;
         import android.hardware.SensorEventListener;
@@ -7,6 +10,9 @@ package com.hackjunction.l33k.restlerforwear;
         import android.os.Bundle;
         import android.os.CountDownTimer;
         import android.os.Vibrator;
+        import android.support.v4.app.NotificationCompat;
+        import android.support.v4.app.NotificationManagerCompat;
+        import android.support.v4.app.NotificationCompat.WearableExtender;
         import android.support.wearable.activity.WearableActivity;
         import android.support.wearable.view.BoxInsetLayout;
         import android.view.View;
@@ -44,6 +50,7 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
     private TextView mRollView;
     private ProgressBar mProgress;
     private Button mButton;
+    private NotificationManagerCompat notificationManager;
 
     private TextView mClockView;
 
@@ -54,6 +61,22 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
         //setContentView(mCustomDrawableView);    // Register the sensor listeners
         setContentView(R.layout.activity_orientation);
       //  setAmbientEnabled();
+
+        Intent viewIntent = new Intent(this, OrientationActivity.class);
+       // viewIntent.putExtra(EXTRA_EVENT_ID, eventId);
+        PendingIntent viewPendingIntent =
+                PendingIntent.getActivity(this, 0, viewIntent, 0);
+
+        final NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.button)
+                        .setContentTitle("Time for exercise!")
+                        .setContentText("Do some wrist moves")
+                        .setContentIntent(viewPendingIntent);
+
+        // Get an instance of the NotificationManager service
+        notificationManager = NotificationManagerCompat.from(this);
+
 
         mContainerView = (BoxInsetLayout) findViewById(R.id.container);
         mStatusView = (TextView) findViewById(R.id.status);
@@ -89,6 +112,12 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
                 mButton.setVisibility(View.VISIBLE);
                 mProgress.setProgress(100);
                 mVibrator.vibrate(1000L);
+                long time = new Date().getTime();
+                String tmpStr = String.valueOf(time);
+                String last4Str = tmpStr.substring(tmpStr.length() - 5);
+                int notificationId = Integer.valueOf(last4Str);
+
+                notificationManager.notify(notificationId, notificationBuilder.build());
             }
         }.start();
 
@@ -106,23 +135,20 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
     }
 
 
-//    @Override
-//    public void onEnterAmbient(Bundle ambientDetails) {
-//        super.onEnterAmbient(ambientDetails);
-//        updateDisplay();
-//    }
-//
-//    @Override
-//    public void onUpdateAmbient() {
-//        super.onUpdateAmbient();
-//        updateDisplay();
-//    }
-//
-//    @Override
-//    public void onExitAmbient() {
-//        updateDisplay();
-//        super.onExitAmbient();
-//    }
+    @Override
+    public void onEnterAmbient(Bundle ambientDetails) {
+        super.onEnterAmbient(ambientDetails);
+    }
+
+    @Override
+    public void onUpdateAmbient() {
+        super.onUpdateAmbient();
+    }
+
+    @Override
+    public void onExitAmbient() {
+        super.onExitAmbient();
+    }
 //
 //    private void updateDisplay() {
 //        if (isAmbient()) {
