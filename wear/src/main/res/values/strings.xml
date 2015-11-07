@@ -1,5 +1,11 @@
 <resources>
+<<<<<<< HEAD
     <string name="app_name">wRistler</string>
     <string name="hello_world">Hello World!</string>
     <string name="welcoming">Welcome!</string>
+=======
+    <string name="app_name">Wristler for Wear</string>
+    <string name="gyro_debug">Test!</string>
+    <string name="status">Loading gyro data...</string>
+>>>>>>> 6df67bde583b79e74334d0adec6648c76e25fd49
 </resources>

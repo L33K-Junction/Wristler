@@ -3,6 +3,7 @@ package com.hackjunction.l33k.restlerforwear;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
+import android.hardware.SensorManager;
 import android.view.View;
 import android.widget.TextView;
 
@@ -27,6 +28,8 @@ public class ExerciseActivity extends WearableActivity {
 
         mContainerView = (BoxInsetLayout) findViewById(R.id.container);
         mTextView = (TextView) findViewById(R.id.text);
+        //alignment = SensorManager.getOrientation();
+        mTextView.setText("Getting pitch...");
         mClockView = (TextView) findViewById(R.id.clock);
     }
 
