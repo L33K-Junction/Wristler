@@ -88,8 +88,8 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
         mButton = (Button) findViewById(R.id.ack);
         mButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                finish();
-                startActivity(getIntent());
+                Intent exerciseActivity = new Intent(getApplicationContext(), ExerciseActivity.class);
+                startActivity(exerciseActivity);
             }
         });
 

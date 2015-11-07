@@ -1,5 +1,6 @@
 package com.hackjunction.l33k.restlerforwear;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.wearable.activity.WearableActivity;
@@ -38,7 +39,8 @@ public class ExerciseActivity extends WearableActivity {
             }
 
             public void onFinish() {
-
+                Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(mainActivity);
             }
         }.start();
     }
