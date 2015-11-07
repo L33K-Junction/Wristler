@@ -1,5 +1,6 @@
 package com.hackjunction.l33k.restlerforwear;
 
+        import android.animation.ObjectAnimator;
         import android.app.NotificationManager;
         import android.app.PendingIntent;
         import android.content.Intent;
@@ -16,6 +17,7 @@ package com.hackjunction.l33k.restlerforwear;
         import android.support.wearable.activity.WearableActivity;
         import android.support.wearable.view.BoxInsetLayout;
         import android.view.View;
+        import android.view.animation.DecelerateInterpolator;
         import android.widget.Button;
         import android.widget.ProgressBar;
         import android.widget.TextView;
@@ -91,7 +93,7 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
             }
         });
 
-        mStatusView.setText("Piping sensor data...");
+        mStatusView.setText("Observing...");
 
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -100,11 +102,16 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
         mVibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
 
 
-        orientationCountdown = new CountDownTimer(30000, 50) {
+        orientationCountdown = new CountDownTimer(30000, 200) {
 
             public void onTick(long millisUntilFinished) {
                 double progress = ((30000.0 - millisUntilFinished)/30000) * 100;
-                mProgress.setProgress((int) progress);
+                // Attempt to make progress smooth
+//                ObjectAnimator animation = ObjectAnimator.ofInt(mProgress, "progress", (int)progress);
+//                animation.setDuration(200);
+//                animation.setInterpolator(new DecelerateInterpolator());
+//                animation.start();
+               mProgress.setProgress((int) progress);
             }
 
             public void onFinish() {
@@ -183,8 +190,8 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
                 azimuth = orientation[0]; // orientation contains: azimuth, pitch and roll
                 pitch = orientation[1]; // orientation contains: azimuth, pitch and roll
                 roll = orientation[2]; // orientation contains: azimuth, pitch and roll
-                mPitchView.setText("Pitch: " + pitch.toString());
-                mRollView.setText("Roll: " + roll.toString());
+                mPitchView.setText("Pitch:\n" + pitch.toString());
+                mRollView.setText("Roll:\n" + roll.toString());
 
             }
         }
