@@ -7,4 +7,5 @@
     <string name="pitch">Pitch: Loading...</string>
     <string name="roll">Roll: Loading...</string>
     <string name="acknowledge">Start</string>
+    <string name="adios">Good Bye!</string>
 </resources>
