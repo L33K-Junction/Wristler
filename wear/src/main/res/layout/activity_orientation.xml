@@ -5,16 +5,17 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:id="@+id/container"
     tools:context=".OrientationActivity" tools:deviceIds="wear"
+    android:keepScreenOn="true"
     style="@style/Theme.Wearable">
 
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="420px"
-        android:layout_height="match_parent"
+        android:layout_width="400px"
+        android:layout_height="400px"
         android:progressDrawable="@drawable/progress_bar"
-        android:progress="50"
-        android:max="100"
+        android:progress="5000"
+        android:max="10000"
         android:id="@+id/progressBar"
         android:layout_gravity="center"/>
 
@@ -50,6 +51,17 @@
             android:layout_width="100dp"
             android:src="@string/roll"
             style="@style/Widget.WearDiag.TextView" />
+
+
+        <TextView
+            android:id="@+id/timer"
+            android:background="@null"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_height="50dp"
+            android:layout_width="100dp"
+            android:src="@string/roll"
+            style="@style/Widget.WearDiag.TextView.Title" />
 
         <Button
             android:visibility="invisible"
