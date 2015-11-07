@@ -14,8 +14,8 @@ public class ExerciseActivity extends WearableActivity {
 
     public static final int EXERCISE_DURATION = 20000;
 
-    private final int STRETCH_EXERCISE_IMAGES[] = {R.drawable.exercise1_hand1_v2,
-            R.drawable.exercise1_hand2_v2};
+    private final int STRETCH_EXERCISE_IMAGES[] = {R.drawable.exercise1_hand1,
+            R.drawable.exercise1_hand2};
 
     private CountDownTimer timer;
     private ImageView exerciseImageView;
