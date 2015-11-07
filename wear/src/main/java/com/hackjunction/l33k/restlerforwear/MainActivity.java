@@ -1,6 +1,7 @@
 package com.hackjunction.l33k.restlerforwear;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.app.Activity;
 import android.view.View;
@@ -32,9 +33,12 @@ public class MainActivity extends Activity {
             }
         });
 
-        final Animation animRotate = AnimationUtils.loadAnimation(this, R.anim.wave);
+        imageView.setAdjustViewBounds(true);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        imageView.setImageDrawable(getResources().getDrawable(R.drawable.greeting_handwave));
 
-        imageView.startAnimation(animRotate);
+        AnimationDrawable frameAnimation = (AnimationDrawable) imageView.getDrawable();
+        frameAnimation.start();
     }
 
 
