@@ -2,6 +2,7 @@ package com.hackjunction.l33k.restlerforwear;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.ImageView;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ public class CloseActivity extends Activity {
 
         imageView = (ImageView) findViewById(R.id.imageClose);
         doItAgainTv = (TextView) findViewById(R.id.do_it_again);
+        final Typeface introTf = Typeface.createFromAsset(getAssets(), "fonts/Intro.otf");
+        doItAgainTv.setTypeface(introTf);
 
         doItAgainTv.setOnClickListener(new View.OnClickListener() {
             @Override

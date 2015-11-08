@@ -1,6 +1,7 @@
 package com.hackjunction.l33k.restlerforwear;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.wearable.activity.WearableActivity;
@@ -34,12 +35,15 @@ public class ExerciseActivity extends WearableActivity {
         setContentView(R.layout.activity_exercise);
         setAmbientEnabled();
 
+        final Typeface introTf = Typeface.createFromAsset(getAssets(), "fonts/Intro.otf");
+
         exerciseImageView = (ImageView) findViewById(R.id.exersice_image);
         secondsLeftTextView = (TextView) findViewById(R.id.exercise_seconds_left_tv);
         exerciseNameTextView = (TextView) findViewById(R.id.exercise_name);
         Random random = new Random();
         final int exerciseNumber = random.nextInt(2);
         exerciseNameTextView.setText(getExerciseName(exerciseNumber));
+        secondsLeftTextView.setTypeface(introTf);
 
         AlphaAnimation countdownAnimation = new AlphaAnimation(1.0f, 0.6f);
         countdownAnimation.setDuration(1000);
