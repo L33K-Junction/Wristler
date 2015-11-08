@@ -25,6 +25,7 @@ package com.hackjunction.l33k.restlerforwear;
 
         import java.math.BigDecimal;
         import java.text.SimpleDateFormat;
+        import java.util.ArrayList;
         import java.util.Date;
         import java.util.Locale;
 
@@ -43,9 +44,11 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
     Sensor accelerometer;
     Sensor magnetometer;
 
-    Float azimuth;
-    Float pitch;
-    Float roll;
+   // private float[] orientation = new float[3];
+   // private float[] orientationPrevious = new float[3];
+   // private float[] minOrientation = new float[3];
+    ArrayList samples = new ArrayList();
+    private float accelTotal = 0L;
 
     private BoxInsetLayout mContainerView;
     private TextView mStatusView;
@@ -56,7 +59,7 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
     private Button mButton;
     private NotificationManagerCompat notificationManager;
 
-    private final int EXERCISE_INTERVAL = 120000;
+    private final int EXERCISE_INTERVAL = 30000;
 
     private TextView mClockView;
 
@@ -111,6 +114,26 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
 
         currentProgress = 0.0;
         // Set exercise to trigger in constant unless wrist movement is detected
+        final Handler sample = new Handler();
+        sample.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                samples.add(accelTotal);
+                accelTotal = 0L;
+                if (samples.size() > 10) {
+                    samples.remove(0);
+                }
+                float totalNow = 0L;
+                for (int i = 0; i < samples.size(); i++) {
+                    totalNow += (float) samples.get(i);
+                }
+                float averageAccel = totalNow/samples.size();
+             //   mTimer.setText("Accel: \n" + Float.toString(averageAccel));
+                sample.postDelayed(this, 1000);
+            }
+        }, 1000);
       //  exerciseCountdown = createCountDown(EXERCISE_INTERVAL);
         final Handler h = new Handler();
         h.postDelayed(new Runnable()
@@ -123,8 +146,7 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
                     int roundProgress = (int) progress;
                     mProgress.setProgress(roundProgress);
                     currentProgress += 15;
-                    mTimer.setText(Integer.toString(roundProgress/100) + "%");
-                    h.postDelayed(this, 20);
+                    h.postDelayed(this, 100);
                 } else {
                     mStatusView.setText("EXERCISE!");
                     mButton.setVisibility(View.VISIBLE);
@@ -133,7 +155,7 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
                 }
 
             }
-        }, 20);
+        }, 100);
     }
 
     protected void onResume() {
@@ -181,32 +203,40 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
 
     float[] mGravity;
     float[] mGeomagnetic;
+    float[] mLastAccel = new float[3];
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER)
-            mGravity = event.values;
-        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
-            mGeomagnetic = event.values;
-        if (mGravity != null && mGeomagnetic != null) {
-            float R[] = new float[9];
-            float I[] = new float[9];
-            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
-            if (success) {
-                float orientation[] = new float[3];
-                SensorManager.getOrientation(R, orientation);
-                azimuth = orientation[0]; // orientation contains: azimuth, pitch and roll
-                pitch = orientation[1]; // orientation contains: azimuth, pitch and roll
-                roll = orientation[2]; // orientation contains: azimuth, pitch and roll
-                if (Math.abs(pitch) > 0.5 || Math.abs(roll) > 0.5) {
-                    if (currentProgress <= 10) {
-                        currentProgress = 0;
-                    } else {
-                        currentProgress -= 10;
-                    }
-                }
-                mPitchView.setText("Pitch:\n" + pitch.toString());
-                mRollView.setText("Roll:\n" + roll.toString());
-
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            float deltaX = Math.abs(mLastAccel[0] - event.values[0]);
+            float deltaY = Math.abs(mLastAccel[1] - event.values[1]);
+            float deltaZ = Math.abs(mLastAccel[2] - event.values[2]);
+            mLastAccel[0] = event.values[0];
+            mLastAccel[1] = event.values[1];
+            mLastAccel[2] = event.values[2];
+            if (deltaX > 0.5) {
+                accelTotal += deltaX;
             }
+            if (deltaY > 0.5) {
+                accelTotal += deltaY;
+            }
+            if (deltaZ > 0.5) {
+                accelTotal += deltaZ;
+            }
+            mPitchView.setText(Float.toString(deltaX));
+            mRollView.setText(Float.toString(event.values[0]));
         }
+            //mGravity = event.values;
+        // if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
+        //     mGeomagnetic = event.values;
+        //  if (mGravity != null && mGeomagnetic != null) {
+         //    float R[] = new float[9];
+          //   float I[] = new float[9];
+          //   boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+           //  if (success) {
+                // Get accel delta for event and sum it to total
+               // SensorManager.getOrientation(R, orientation);
+               // mPitchView.setText("Pitch:\n" + pitch.toString());
+               // mRollView.setText("Roll:\n" + roll.toString());
+       //      }
+       //  }
     }
 }
