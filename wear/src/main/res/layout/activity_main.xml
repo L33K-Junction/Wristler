@@ -18,7 +18,8 @@
         android:layout_marginTop="10dp"
         android:textColor="#f05f40"
         android:textStyle="bold"
-        android:paddingTop="22px"
+        android:paddingTop="10px"
+        android:paddingBottom="15px"
         android:text="@string/app_name" />
 
 
