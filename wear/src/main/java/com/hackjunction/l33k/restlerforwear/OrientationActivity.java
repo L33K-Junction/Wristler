@@ -4,6 +4,7 @@ package com.hackjunction.l33k.restlerforwear;
         import android.app.NotificationManager;
         import android.app.PendingIntent;
         import android.content.Intent;
+        import android.graphics.Typeface;
         import android.hardware.Sensor;
         import android.hardware.SensorEvent;
         import android.hardware.SensorEventListener;
@@ -17,6 +18,7 @@ package com.hackjunction.l33k.restlerforwear;
         import android.support.v4.app.NotificationCompat.WearableExtender;
         import android.support.wearable.activity.WearableActivity;
         import android.support.wearable.view.BoxInsetLayout;
+        import android.util.Log;
         import android.view.View;
         import android.view.animation.DecelerateInterpolator;
         import android.widget.Button;
@@ -103,11 +105,18 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
             }
         });
 
+
+        final Typeface introTf = Typeface.createFromAsset(getAssets(), "fonts/Intro.otf");
+        final Typeface introInlineTf = Typeface.createFromAsset(getAssets(), "fonts/Intro Inline.otf");
+
         mStatusView.setText("Observing...");
+        mTimer.setTypeface(introTf);
 
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        Log.i("ACCELEROMETER " , String.valueOf(mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER).getMaximumRange()));
         magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        Log.i("TYPE_MAGNETIC_FIELD " , String.valueOf(mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD).getMaximumRange()));
 
         mVibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
 
@@ -149,6 +158,7 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
                     h.postDelayed(this, 100);
                 } else {
                     mStatusView.setText("EXERCISE!");
+                    mStatusView.setTypeface(introInlineTf);
                     mButton.setVisibility(View.VISIBLE);
                     mProgress.setProgress(10000);
                     mVibrator.vibrate(1000L);

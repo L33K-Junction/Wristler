@@ -3,6 +3,7 @@
     <string name="hello_world">Hello World!</string>
     <string name="welcoming">Welcome!</string>
     <string name="start">START</string>
+    <string name="do_it_again">DO IT AGAIN</string>
     <string name="gyro_debug">Test!</string>
     <string name="status">Loading gyro data...</string>
     <string name="pitch">Pitch: Loading...</string>
@@ -12,4 +13,5 @@
     <string name="exersize2">Push</string>
     <string name="exersize3">Shake</string>
     <string name="adios">Good Bye!</string>
+    <string name="advice">Keep training to prevent your wrist pain</string>
 </resources>
