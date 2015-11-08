@@ -38,7 +38,7 @@ public class ExerciseActivity extends WearableActivity {
         secondsLeftTextView = (TextView) findViewById(R.id.exercise_seconds_left_tv);
         exerciseNameTextView = (TextView) findViewById(R.id.exercise_name);
         Random random = new Random();
-        final int exerciseNumber = random.nextInt(3);
+        final int exerciseNumber = random.nextInt(2);
         exerciseNameTextView.setText(getExerciseName(exerciseNumber));
 
         AlphaAnimation countdownAnimation = new AlphaAnimation(1.0f, 0.6f);
@@ -62,7 +62,7 @@ public class ExerciseActivity extends WearableActivity {
             public void onFinish() {
                 secondsLeftTextView.setText("00:00");
                 progressBar.setProgress(10000);
-                Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                Intent mainActivity = new Intent(getApplicationContext(), CloseActivity.class);
                 startActivity(mainActivity);
             }
         }.start();
