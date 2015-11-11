@@ -66,6 +66,7 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
     private TextView mClockView;
 
     private int progress;
+    private float averageAccel;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +122,7 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
         mVibrator = (Vibrator)getSystemService(VIBRATOR_SERVICE);
 
 
+
         currentProgress = 0.0;
         // Set exercise to trigger in constant unless wrist movement is detected
         final Handler sample = new Handler();
@@ -138,7 +140,7 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
                 for (int i = 0; i < samples.size(); i++) {
                     totalNow += (float) samples.get(i);
                 }
-                float averageAccel = totalNow/samples.size();
+                averageAccel = totalNow/samples.size();
              //   mTimer.setText("Accel: \n" + Float.toString(averageAccel));
                 sample.postDelayed(this, 1000);
             }
@@ -154,7 +156,14 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
                 if (progress < 10000.0) {
                     int roundProgress = (int) progress;
                     mProgress.setProgress(roundProgress);
-                    currentProgress += 15;
+                    if (averageAccel > 50) {
+                        currentProgress -= 5;
+                    } else if (averageAccel > 200) {
+                        currentProgress -= 30;
+                    } else {
+                        currentProgress += 40;
+                    }
+                    mStatusView.setText(Integer.toString(roundProgress/100) + "%");
                     h.postDelayed(this, 100);
                 } else {
                     mStatusView.setText("EXERCISE!");
@@ -162,6 +171,8 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
                     mButton.setVisibility(View.VISIBLE);
                     mProgress.setProgress(10000);
                     mVibrator.vibrate(1000L);
+               mPitchView.setVisibility(View.INVISIBLE);
+                    mRollView.setVisibility(View.INVISIBLE);
                 }
 
             }
@@ -231,8 +242,8 @@ public class OrientationActivity extends WearableActivity implements SensorEvent
             if (deltaZ > 0.5) {
                 accelTotal += deltaZ;
             }
-            mPitchView.setText(Float.toString(deltaX));
-            mRollView.setText(Float.toString(event.values[0]));
+            //mPitchView.setText(Float.toString(deltaX));
+            //mRollView.setText(Float.toString(event.values[0]));
         }
             //mGravity = event.values;
         // if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
